@@ -1,0 +1,33 @@
+
+{% extends 'netauto/base.html' %}
+
+{% block content %}
+<div class="mt-5 card-deck" style="margin:auto;">
+    <div class="card border-primary mb-3" style="max-width: 18rem;">
+        <div class="card-body text-primary">
+        <h5 class="card-title">{{total_devices}}</h5>
+        <div class="mr-3 text-right" style="font-size: 36px;">
+            <i class="fa fa-list fa-lg"></i>
+        </div>
+        </div>
+        <div class="card-footer bg-primary border-primary text-white">Total Devices</div>
+    </div>
+</div>
+
+<h3 class="mt-4">Last Event</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Target Device</th>
+            <th>Action</th>
+            <th>Status</th>
+            <th>Time Done</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+
+    </tbody>
+</table>
+{% endblock content %}
