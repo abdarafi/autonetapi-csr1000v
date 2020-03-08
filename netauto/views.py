@@ -51,7 +51,7 @@ def add_ip(request):
                     'if-name':interface,
                     'ip-address': new_ip_addr,
                     'subnet-mask': new_subnetmask,
-                    'description': 'TEST-PUT-INTERFACE'
+                    'description': 'Configured via AUTONETAPI'
                     }
 
                 response = requests.put(url, headers=headers, json=payload, verify=False)
@@ -73,6 +73,10 @@ def add_ip(request):
             'all_devices' : all_devices,
         }
         return render(request, 'netauto/add_ip.html', context)
+
+def static_route(request):
+
+    return render(request, 'netauto/static_route.html')
 
 
 def show_config(request):
