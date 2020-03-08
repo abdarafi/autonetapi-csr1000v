@@ -30,9 +30,8 @@
                     <div class="dropdown-menu">
                         <a href="{% url 'add_ip' %}" class="dropdown-item">IP Address</a>
                         <a href="{% url 'static' %}" class="dropdown-item">Static Route</a>
-                        <a href="#" class="dropdown-item">RIP Route</a>
-                        <a href="#" class="dropdown-item">OSPF Route</a>
-                        <a href="#" class="dropdown-item">BGP Route</a>
+                        <a href="{% url 'ospf' %}" class="dropdown-item">OSPF Route</a>
+                        <a href="{% url 'bgp' %}" class="dropdown-item">BGP Route</a>
                     </div>
                 </li>
             </ul>
