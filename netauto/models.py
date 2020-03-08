@@ -7,7 +7,6 @@ class Device(models.Model):
     hostname = models.CharField(max_length=200)
     username = models.CharField(max_length=200)
     password = models.CharField(max_length=200)
-    ssh_port = models.IntegerField(default=22)
 
     def __str__(self):
         return "{}, {}".format(self.hostname, self.ip_address)
