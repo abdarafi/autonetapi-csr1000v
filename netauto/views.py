@@ -233,17 +233,50 @@ def bgp(request):
 
 def show_config(request):
     if request.method == "POST":
+        head = 'The Configuration Result'
+        cisco_command = request.POST['cisco_command']
+        selected_device_id = request.POST['router']
+        dev = get_object_or_404(Device, pk=selected_device_id)
+        def get_token():
+            url = 'https://%s:55443/api/v1/auth/token-services' % dev.ip_address
+            auth = (dev.username, dev.password) 
+            headers = {'Content-Type':'application/json'}
+            response = requests.post(url, auth=auth, headers=headers, verify=False)
+            json_data = json.loads(response.text)
+            token = json_data['token-id']
+            return token
+        def send_cli(token):
+            url = 'https://%s:55443/api/v1/global/cli' % dev.ip_address
+            headers = {'Content-Type':'application/json','X-auth-token': token}
+            payload = {
+                "exec" : cisco_command
+            }
+            response = requests.put(url, headers=headers, json=payload, verify=False)
+            json_data = json.loads(response.text)
+            #print(json.dumps(json_data, indent=4, separators=(',', ': ')))
+            return "Hasil response : \n " + json_data['results']
+
+        # Disable unverified HTTPS request warnings.
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+        # Get token.
+        token = get_token()
+
+        # Put the CLI Command
+        send_cli(token)
         context = {
-            'result' : "halo gan ini adalah contoh hasil dari konfigurasi perangkat router",  
+            'head' : head,
+            'status' : send_cli(token),
         }
         return render(request, 'netauto/result.html', context)
     else:
+        head = 'Validate your configuration'
         all_devices = Device.objects.all()
         context = {
             'all_devices' : all_devices,
-            'mode' : "Show Configuration Result",
+            'head' : head,
         }
-        return render(request, 'netauto/configure.html', context)
+        return render(request, 'netauto/validate.html', context)
 
 def log(request):
     return render(request, 'netauto/log.html')

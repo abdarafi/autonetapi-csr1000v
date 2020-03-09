@@ -1,0 +1,18 @@
+
+{% extends "netauto/base.html" %}
+{% block content %}
+   <h1 class="mt-4">{{head}}</h1>
+   <p>In this validate the configuration menu, you can execute the Cisco CLI command under the exec mode on your specific router.</p>
+    <form method="POST">
+        {% csrf_token %}
+        <select class="custom-select" name="router">
+            <option selected>Choose Target</option>
+            {% for device in all_devices %}
+            <option value="{{ device.id }}">{{device.hostname}} - {{device.ip_address}}</option>
+            {% endfor %}
+          </select>
+        <h4 class="mt-3">Cisco Command</h4>
+        <textarea class="form-control" rows="5" name="cisco_command"></textarea>
+        <button type="submit" class="mt-3 btn btn-primary">Submit</button>
+    </form>
+{% endblock content %}
