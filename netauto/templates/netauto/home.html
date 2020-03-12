@@ -19,16 +19,21 @@
 <table class="table">
     <thead>
         <tr>
-            <th>No</th>
             <th>Target Device</th>
             <th>Action</th>
             <th>Status</th>
-            <th>Time Done</th>
+            <th>Time</th>
         </tr>
     </thead>
     <tbody>
-        
-
+        {% for log in last_event %}
+        <tr>
+        <td>{{log.target}}</td>
+        <td>{{log.action}}</td>
+        <td>{{log.status}}</td>
+        <td>{{log.time}}</td>
+        {% endfor %}
+        </tr>
     </tbody>
 </table>
 {% endblock content %}

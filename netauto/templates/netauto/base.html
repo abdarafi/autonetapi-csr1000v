@@ -37,6 +37,13 @@
                 <li class="nav-item">
                     <a href="{% url 'result' %}" class="nav-link">Validate</a>
                 </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Log</a>
+                    <div class="dropdown-menu">
+                        <a href="{% url 'log' %}" class="dropdown-item">App Log</a>
+                        <a href="{% url 'syslog' %}" class="dropdown-item">Export Syslog</a>
+                    </div>
+                </li>
             </ul>
             
         </div>

@@ -10,4 +10,5 @@ urlpatterns = [
     path('static_route/', views.static_route, name='static'),
     path('ospf/', views.ospf, name='ospf'),
     path('bgp/', views.bgp, name='bgp'),
+    path('syslog/', views.syslog, name='syslog'),
 ]
