@@ -12,3 +12,4 @@ urlpatterns = [
     path('bgp/', views.bgp, name='bgp'),
     path('syslog/', views.syslog, name='syslog'),
 ]
+

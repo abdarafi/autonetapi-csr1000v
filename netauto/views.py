@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.contrib.auth.decorators import login_required
 from .models import Device, Log
 import requests
 import urllib3
@@ -7,6 +8,7 @@ from datetime import datetime
 
 # Create your views here.
 
+@login_required
 def home(request):
     total_devices = Device.objects.all()
     last_event = Log.objects.all().order_by('-id')[:10]
@@ -17,6 +19,7 @@ def home(request):
 
     return render(request, 'netauto/home.html', context)
 
+@login_required
 def devices(request):
     all_devices = Device.objects.all()
 
@@ -25,6 +28,7 @@ def devices(request):
     }
     return render(request, 'netauto/devices.html', context)
 
+@login_required
 def add_ip(request):
     if request.method == "POST":
         
@@ -89,6 +93,7 @@ def add_ip(request):
         }
         return render(request, 'netauto/add_ip.html', context)
 
+@login_required
 def static_route(request):
     if request.method == "POST":
         dest_network = request.POST['dest']+ '/' + request.POST['prefix']
@@ -152,6 +157,7 @@ def static_route(request):
         }
         return render(request, 'netauto/static_route.html', context)
 
+@login_required
 def ospf(request):
     if request.method == "POST":
         ospf_process_id = request.POST['ospf_process_id']
@@ -220,6 +226,7 @@ def ospf(request):
         }
         return render(request, 'netauto/ospf.html', context)
 
+@login_required
 def bgp(request):
     if request.method == "POST":
         bgp_instance_id = request.POST['bgp_instance_id']
@@ -285,7 +292,7 @@ def bgp(request):
         }
         return render(request, 'netauto/bgp.html', context)
 
-
+@login_required
 def show_config(request):
     if request.method == "POST":
         head = 'The Configuration Result'
@@ -346,6 +353,7 @@ def show_config(request):
         }
         return render(request, 'netauto/validate.html', context)
 
+@login_required
 def syslog(request):
     if request.method == "POST":
         selected_device_id = request.POST['router']
@@ -391,9 +399,15 @@ def syslog(request):
         }
         return render(request, 'netauto/syslog.html', context)
 
+@login_required
 def log(request):
     logs = Log.objects.all().order_by('-id')
     context = {
         'logs': logs
     }
     return render(request, 'netauto/log.html', context)
+
+def handler404(request, exception):
+    return render(request, 'netauto/404.html')
+def handler500(request):
+    return render(request, 'netauto/500.html')

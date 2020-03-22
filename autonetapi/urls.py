@@ -18,5 +18,9 @@ from django.urls import include, path
 
 urlpatterns = [
     path('', include('netauto.urls')),
+    path('', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
 ]
+
+handler404 = 'netauto.views.handler404'
+handler500 = 'netauto.views.handler500'
