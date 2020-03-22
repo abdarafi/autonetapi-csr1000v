@@ -1,23 +1,25 @@
 
 {% extends "netauto/base.html" %}
 {% block content %}
-    <h2 class="mt-4">Log</h2>
-    <table class="mt-3 table"> 
-        <tr>
-            <th>Target</th>
-            <th>Action</th>
-            <th>Status</th>
-            <th>Time</th>
-            <th>Messages</th>
-        </tr>
-        {% for log in logs %}
+    <h2 class="mt-4 text-gray-800">Log</h2>
+    <div class="table-responsive">
+        <table class="mt-3 table text-gray-800"> 
             <tr>
-                <td>{{ log.target }}</td>
-                <td>{{ log.action }}</td>
-                <td>{{ log.status }}</td>
-                <td>{{ log.time }}</td>
-                <td>{{ log.messages }}</td>
+                <th>Target</th>
+                <th>Action</th>
+                <th>Status</th>
+                <th>Time</th>
+                <th>Messages</th>
             </tr>
-        {% endfor %}
-    </table>
+            {% for log in logs %}
+                <tr>
+                    <td>{{ log.target }}</td>
+                    <td>{{ log.action }}</td>
+                    <td>{{ log.status }}</td>
+                    <td>{{ log.time }}</td>
+                    <td>{{ log.messages }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 {% endblock content %}

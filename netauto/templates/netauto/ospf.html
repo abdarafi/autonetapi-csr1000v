@@ -1,10 +1,10 @@
 {% extends "netauto/base.html" %}
 {% block content %}
-<h2 class="mt-4">Add OSPF Routes</h2>
+<h2 class="mt-4 text-gray-800">Add OSPF Routes</h2>
 <p>In this configuration menu, you can add a OSPF (Open Shortest Path First) route.</p>
 <form method="POST">
     {% csrf_token %}
-    <h4 class="mt-3">Choose Target:</h4>
+    <h4 class="mt-3 text-gray-800">Choose Target:</h4>
     {% for device in all_devices %}
     <div class="custom-control custom-checkbox">
         <input type="checkbox" name="device" value="{{ device.id }}"> {{device.hostname}} - {{device.ip_address}}<br>
