@@ -1,29 +1,54 @@
-{% extends "netauto/base.html" %}
-{% block content %}
+{% extends "netauto/base.html" %} {% block content %}
 <h2 class="mt-4 text-gray-800">Add OSPF Routes</h2>
-<p>In this configuration menu, you can add a OSPF (Open Shortest Path First) route.</p>
+<p>
+  In this configuration menu, you can add a OSPF (Open Shortest Path First)
+  route.
+</p>
 <form method="POST">
-    {% csrf_token %}
-    <h4 class="mt-3 text-gray-800">Choose Target:</h4>
-    {% for device in all_devices %}
-    <div class="custom-control custom-checkbox">
-        <input type="checkbox" name="device" value="{{ device.id }}"> {{device.hostname}} - {{device.ip_address}}<br>
+  {% csrf_token %}
+  <h4 class="mt-3 text-gray-800">Choose Target:</h4>
+  {% for device in all_devices %}
+  <div class="custom-control custom-checkbox">
+    <input
+      type="checkbox"
+      name="device"
+      value="{{ device.id }}"
+      required="true"
+    />
+    {{device.hostname}} - {{device.ip_address}}<br />
+  </div>
+  {% endfor %}
+  <br />
+  <input
+    class="form-control"
+    type="text"
+    name="ospf_process_id"
+    placeholder="OSPF Process ID"
+    required="true"
+  />
+  <br />
+  <div class="form-row">
+    <div class="col">
+      <input
+        type="text"
+        class="form-control"
+        name="network"
+        placeholder="Destination Network"
+        required="true"
+      />
     </div>
-    {% endfor %}
-    <br>
-    <input class="form-control" type="text" name="ospf_process_id" placeholder="OSPF Process ID">
-    <br>
-    <div class="form-row">
-        <div class="col">
-          <input type="text" class="form-control" name ="network" placeholder="Destination Network">
-        </div>
-        <div class="col">
-          <input type="text" class="form-control" name = "prefix" placeholder="Prefix (8-32)">
-        </div>
+    <div class="col">
+      <input
+        type="text"
+        class="form-control"
+        name="prefix"
+        placeholder="Prefix (8-32)"
+        required="true"
+      />
     </div>
-    <br>
-    <input class="form-control" type="text" name="area" placeholder="Area">
-    <button type="submit" class="mt-3 btn btn-primary">Submit</button>
-
+  </div>
+  <br />
+  <input class="form-control" type="text" name="area" placeholder="Area" />
+  <button type="submit" class="mt-3 btn btn-primary">Submit</button>
 </form>
 {% endblock content %}

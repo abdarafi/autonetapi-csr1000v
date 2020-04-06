@@ -1,0 +1,15 @@
+{% extends "netauto/base.html" %} {% block content %}
+<div class="container-fluid">
+  <!-- 404 Error Text -->
+  <div class="text-center">
+    <div class="error mx-auto" data-text="403">403</div>
+    <p class="lead text-gray-800 mb-5">Access Denied</p>
+    <p class="text-black-500 mb-0">
+      You do not have permission to access this page, contact your Super
+      Administrator to grant the access...
+    </p>
+    <a href="{% url 'home' %}">&larr; Back to Dashboard</a>
+  </div>
+</div>
+<!-- End of Main Content -->
+{% endblock %}

@@ -1,5 +1,10 @@
 from django.urls import path
+from autonetapi import settings
 from . import views
+from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
+
+
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -11,5 +16,10 @@ urlpatterns = [
     path('ospf/', views.ospf, name='ospf'),
     path('bgp/', views.bgp, name='bgp'),
     path('syslog/', views.syslog, name='syslog'),
+    path('custom/', views.custom, name='custom'),
+    path('login/', auth_views.LoginView.as_view(template_name="registration/login.html", redirect_authenticated_user=True), name='login'),
 ]
 
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

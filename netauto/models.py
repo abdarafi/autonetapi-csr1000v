@@ -17,6 +17,7 @@ class Log(models.Model):
     status = models.CharField(max_length=200)
     messages = models.CharField(max_length=255, blank=True)
     time = models.DateTimeField(null=True)
+    user = models.CharField(max_length=200, default='Anonymous')
 
     def __str__(self):
         return "{} - {} - {}".format(self.target, self.action, self.status)

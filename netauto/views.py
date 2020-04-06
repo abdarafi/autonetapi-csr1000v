@@ -1,11 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.core.files.storage import FileSystemStorage
+#from .forms import Scripts
 from .models import Device, Log
 import requests
 import urllib3
 import json
 from datetime import datetime
+from .decorators import superadmin_only
 
+FILE_TYPE = ['txt', 'conf']
 # Create your views here.
 
 @login_required
@@ -29,6 +33,7 @@ def devices(request):
     return render(request, 'netauto/devices.html', context)
 
 @login_required
+@superadmin_only
 def add_ip(request):
     if request.method == "POST":
         
@@ -77,13 +82,13 @@ def add_ip(request):
                 # Put new interface.
                 put_interface(token, interface)
                 if put_interface(token,interface) == "Success":
-                    log = Log(target=dev.ip_address, action="Modify IP Address", status="Successful", time= datetime.now(), messages='No Error')
+                    log = Log(target=dev.ip_address, action="Modify IP Address", status="Successful", time= datetime.now(), user=request.user.username, messages='No Error')
                     log.save()
                 else:
-                    log = Log(target=dev.ip_address, action="Modify IP Address", status="Error", time= datetime.now(), messages=put_interface(token,interface))
+                    log = Log(target=dev.ip_address, action="Modify IP Address", status="Error", time= datetime.now(), user=request.user.username, messages=put_interface(token,interface))
                     log.save()
             except Exception as e:
-                log = Log(target=dev.ip_address, action="Modify IP Address", status="Error", time= datetime.now(), messages=e)
+                log = Log(target=dev.ip_address, action="Modify IP Address", status="Error", time= datetime.now(), user=request.user.username, messages=e)
                 log.save()
         return redirect('home')
     else:
@@ -94,6 +99,7 @@ def add_ip(request):
         return render(request, 'netauto/add_ip.html', context)
 
 @login_required
+@superadmin_only
 def static_route(request):
     if request.method == "POST":
         dest_network = request.POST['dest']+ '/' + request.POST['prefix']
@@ -139,13 +145,13 @@ def static_route(request):
                 hasil = post_static_route(token, outinterface)
 
                 if hasil == "Success":
-                    log = Log(target=dev.ip_address, action="Add Static Route", status="Successful", time= datetime.now(), messages='No Error')
+                    log = Log(target=dev.ip_address, action="Add Static Route", status="Successful", time= datetime.now(), user=request.user.username, messages='No Error')
                     log.save()
                 else:
-                    log = Log(target=dev.ip_address, action="Add Static Route", status="Error", time= datetime.now(), messages=post_static_route(token,outinterface))
+                    log = Log(target=dev.ip_address, action="Add Static Route", status="Error", time= datetime.now(), user=request.user.username, messages=post_static_route(token,outinterface))
                     log.save()
             except Exception as e:
-                log = Log(target=dev.ip_address, action="Add Static Route", status="Error", time= datetime.now(), messages=e)
+                log = Log(target=dev.ip_address, action="Add Static Route", status="Error", time= datetime.now(), user=request.user.username, messages=e)
                 log.save()
         return redirect('home')
 
@@ -158,6 +164,7 @@ def static_route(request):
         return render(request, 'netauto/static_route.html', context)
 
 @login_required
+@superadmin_only
 def ospf(request):
     if request.method == "POST":
         ospf_process_id = request.POST['ospf_process_id']
@@ -208,13 +215,13 @@ def ospf(request):
                 # Post OSPF.
                 hasil = post_ospf(token)
                 if hasil == "Success":
-                    log = Log(target=dev.ip_address, action="Add OSPF Route", status="Successful", time= datetime.now(), messages='No Error')
+                    log = Log(target=dev.ip_address, action="Add OSPF Route", status="Successful", time= datetime.now(), user=request.user.username, messages='No Error')
                     log.save()
                 else:
-                    log = Log(target=dev.ip_address, action="Add OSPF Route", status="Error", time= datetime.now(), messages=post_ospf(token))
+                    log = Log(target=dev.ip_address, action="Add OSPF Route", status="Error", time= datetime.now(), user=request.user.username, messages=post_ospf(token))
                     log.save()
             except Exception as e:
-                log = Log(target=dev.ip_address, action="Add OSPF Route", status="Error", time= datetime.now(), messages=e)
+                log = Log(target=dev.ip_address, action="Add OSPF Route", status="Error", time= datetime.now(), user=request.user.username, messages=e)
                 log.save()
 
         return redirect('home')
@@ -227,6 +234,7 @@ def ospf(request):
         return render(request, 'netauto/ospf.html', context)
 
 @login_required
+@superadmin_only
 def bgp(request):
     if request.method == "POST":
         bgp_instance_id = request.POST['bgp_instance_id']
@@ -275,13 +283,13 @@ def bgp(request):
                 # Post BGP.
                 hasil = post_bgp(token)
                 if hasil == "Success":
-                    log = Log(target=dev.ip_address, action="Add BGP Route", status="Successful", time= datetime.now(), messages='No Error')
+                    log = Log(target=dev.ip_address, action="Add BGP Route", status="Successful", time= datetime.now(), user=request.user.username, messages='No Error')
                     log.save()
                 else:
-                    log = Log(target=dev.ip_address, action="Add BGP Route", status="Error", time= datetime.now(), messages=post_bgp(token))
+                    log = Log(target=dev.ip_address, action="Add BGP Route", status="Error", time= datetime.now(), user=request.user.username, messages=post_bgp(token))
                     log.save()
             except Exception as e:
-                log = Log(target=dev.ip_address, action="Add BGP Route", status="Error", time= datetime.now(), messages=e)
+                log = Log(target=dev.ip_address, action="Add BGP Route", status="Error", time= datetime.now(), user=request.user.username, messages=e)
                 log.save()
 
         return redirect('home')
@@ -331,13 +339,13 @@ def show_config(request):
             # Put the CLI Command
             send_cli(token)
             if send_cli(token)[1] == "bisa":
-                log = Log(target=dev.ip_address, action="Validate Configuration", status="Successful", time= datetime.now(), messages="No Error")
+                log = Log(target=dev.ip_address, action="Validate Configuration", status="Successful", time= datetime.now(), user=request.user.username, messages="No Error")
                 log.save()
             else:
-                log = Log(target=dev.ip_address, action="Validate Configuration", status="Error", time= datetime.now(), messages="Invalid Cisco Command")
+                log = Log(target=dev.ip_address, action="Validate Configuration", status="Error", time= datetime.now(), user=request.user.username, messages="Invalid Cisco Command")
                 log.save()
         except Exception as e:
-            log = Log(target=dev.ip_address, action="Validate Configuration", status="Error", time= datetime.now(), messages=e)
+            log = Log(target=dev.ip_address, action="Validate Configuration", status="Error", time= datetime.now(), user=request.user.username, messages=e[:100])
             log.save()
         context = {
             'head' : head,
@@ -381,10 +389,10 @@ def syslog(request):
             token = get_token()
 
             get_syslog(token)
-            log = Log(target=dev.ip_address, action="Export Syslog", status="Successful", time= datetime.now(), messages="No Error")
+            log = Log(target=dev.ip_address, action="Export Syslog", status="Successful", time= datetime.now(), user=request.user.username, messages="No Error")
             log.save()
         except Exception as e:
-            log = Log(target=dev.ip_address, action="Export Syslog", status="Error", time= datetime.now(), messages=e)
+            log = Log(target=dev.ip_address, action="Export Syslog", status="Error", time= datetime.now(), user=request.user.username, messages=e)
             log.save()
         
         filename = "syslog.txt"
@@ -400,6 +408,78 @@ def syslog(request):
         return render(request, 'netauto/syslog.html', context)
 
 @login_required
+@superadmin_only
+def custom(request):
+    all_devices = Device.objects.all()
+    if request.method == "POST" and request.FILES['myScript']:
+        myScript = request.FILES['myScript']
+        fs = FileSystemStorage()
+        scriptName = fs.save(myScript.name, myScript)
+        uploaded_file_url = fs.url(scriptName)
+        file_type = uploaded_file_url.split('.')[-1]
+        file_type = file_type.lower()
+        if file_type not in FILE_TYPE:
+            fs.delete(myScript.name)
+            return render(request, 'netauto/500.html')
+        else:
+            with open(uploaded_file_url) as f:
+                handler = f.read().strip()
+            cisco_command = {
+                'config' : handler
+            }
+            selected_device_id = request.POST['router']
+            dev = get_object_or_404(Device, pk=selected_device_id)
+            try:
+                def get_token():
+                    url = 'https://%s:55443/api/v1/auth/token-services' % dev.ip_address
+                    auth = (dev.username, dev.password) 
+                    headers = {'Content-Type':'application/json'}
+                    response = requests.post(url, auth=auth, headers=headers, verify=False)
+                    json_data = json.loads(response.text)
+                    token = json_data['token-id']
+                    return token
+                def send_cli(token):
+                    url = 'https://%s:55443/api/v1/global/cli' % dev.ip_address
+                    headers = {'Content-Type':'application/json','X-auth-token': token}
+                    response = requests.put(url, headers=headers, json=cisco_command, verify=False)
+                    json_data = json.loads(response.text)
+                    #print(json.dumps(json_data, indent=4, separators=(',', ': ')))
+                    if response.status_code >= 400:
+                        return (json_data['detail'], 'gabisa')
+                    else:
+                        return ('bisa')
+
+                # Disable unverified HTTPS request warnings.
+                urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+                # Get token.
+                token = get_token()
+
+                # Put the CLI Command
+                send_cli(token)
+                if send_cli(token) == "gabisa":
+                    log = Log(target=dev.ip_address, action="Custom Configuration", status="Error", time= datetime.now(), user=request.user.username, messages="Invalid Script")
+                    log.save()
+                else:
+                    log = Log(target=dev.ip_address, action="Custom Configuration", status="Successful", time= datetime.now(), user=request.user.username, messages="No Error")
+                    log.save()
+            except Exception as e:
+                error_false = "Expecting value: line 1 column 1 (char 0)"
+                if error_false not in str(e):
+                    log = Log(target=dev.ip_address, action="Custom Configuration", status="Error", time= datetime.now(), user=request.user.username, messages=e)
+                else:
+                    log = Log(target=dev.ip_address, action="Custom Configuration", status="Successful", time= datetime.now(), user=request.user.username, messages="No Error")
+                log.save()
+
+            fs.delete(myScript.name)
+            return redirect('home')
+    else:
+        context = {
+            'all_devices': all_devices,
+        }
+        return render(request, 'netauto/custom.html', context)
+
+@login_required
 def log(request):
     logs = Log.objects.all().order_by('-id')
     context = {
@@ -407,6 +487,8 @@ def log(request):
     }
     return render(request, 'netauto/log.html', context)
 
+def handler403(request):
+    return render(request, 'netauto/403.html')
 def handler404(request, exception):
     return render(request, 'netauto/404.html')
 def handler500(request):
