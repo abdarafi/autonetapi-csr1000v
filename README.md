@@ -14,15 +14,14 @@ Just install it via pip
 
 ### Installation
 
-> - Clone this repository
-> - Make migration of the database
-> - Create your Django superadmin
-> - Set the administrator roles under Groups
->   - superadmin
->   - admin
+1. Clone this repository
+2. Make migration of the database
+3. Create your Django superadmin
+4. Set the administrator roles under groups :
+   - superadmin
+   - admin
 
 Run
-
 ```bash
 python manage.py runserver
 ```
@@ -47,7 +46,5 @@ to start the project.
 Tested running on AWS VPC to manage 3 CSR1000v routers in total.
 
 Any question about network automation, drop your messages [here](https://twitter.com/rafi_citizen06)
-
-
 
 
