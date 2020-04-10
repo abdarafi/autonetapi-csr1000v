@@ -10,7 +10,18 @@ from datetime import datetime
 from .decorators import superadmin_only
 
 FILE_TYPE = ['txt', 'conf']
-# Create your views here.
+
+# Check if the user is superadmin or not.
+
+def check_superadmin(request, *args, **kwargs):
+    if request.user.groups.all()[0].name == 'superadmin':
+        return True
+    else:
+        return False
+
+# Getting the token of the device
+
+# Start of the app views.
 
 @login_required
 def home(request):
@@ -19,6 +30,7 @@ def home(request):
     context = {
         'total_devices' : len(total_devices),
         'last_event': last_event,
+        'superadmin' : check_superadmin(request),
     }
 
     return render(request, 'netauto/home.html', context)
@@ -29,6 +41,7 @@ def devices(request):
 
     context = {
         'all_devices' : all_devices,
+        'superadmin' : check_superadmin(request),
     }
     return render(request, 'netauto/devices.html', context)
 
@@ -36,15 +49,13 @@ def devices(request):
 @superadmin_only
 def add_ip(request):
     if request.method == "POST":
-        
-        interface = request.POST['interface']
-        new_ip_addr = request.POST['ip_address']
-        new_subnetmask = request.POST['subnetmask']
-
         selected_device_id = request.POST.getlist('device')
         for x in selected_device_id:    
             try:
                 dev = get_object_or_404(Device, pk=x)
+                interface = request.POST['interface'+x]
+                new_ip_addr = request.POST['ip_address'+x]
+                new_subnetmask = request.POST['subnetmask'+x]
                 def get_token():
                     url = 'https://%s:55443/api/v1/auth/token-services' % dev.ip_address
                     auth = (dev.username, dev.password) 
@@ -95,6 +106,7 @@ def add_ip(request):
         all_devices = Device.objects.all()
         context = {
             'all_devices' : all_devices,
+            'superadmin' : check_superadmin(request),
         }
         return render(request, 'netauto/add_ip.html', context)
 
@@ -102,15 +114,14 @@ def add_ip(request):
 @superadmin_only
 def static_route(request):
     if request.method == "POST":
-        dest_network = request.POST['dest']+ '/' + request.POST['prefix']
-        next_hop =  request.POST['next_hop'] 
-        outinterface = request.POST['outinterface']
-        admin_distance = request.POST['admin_distance']
-
         selected_device_id = request.POST.getlist('device')
         for x in selected_device_id:
             try:
                 dev = get_object_or_404(Device, pk=x)
+                dest_network = request.POST['dest'+x]+ '/' + request.POST['prefix'+x]
+                next_hop =  request.POST['next_hop'+x] 
+                outinterface = request.POST['outinterface'+x]
+                admin_distance = request.POST['admin_distance'+x]
                 def get_token():
                     url = 'https://%s:55443/api/v1/auth/token-services' % dev.ip_address
                     auth = (dev.username, dev.password) 
@@ -160,6 +171,7 @@ def static_route(request):
         all_devices = Device.objects.all()
         context = {
             'all_devices' : all_devices,
+            'superadmin' : check_superadmin(request),
         }
         return render(request, 'netauto/static_route.html', context)
 
@@ -167,13 +179,13 @@ def static_route(request):
 @superadmin_only
 def ospf(request):
     if request.method == "POST":
-        ospf_process_id = request.POST['ospf_process_id']
-        network = request.POST['network'] + '/' + request.POST['prefix']
-        area = request.POST['area']
         selected_device_id = request.POST.getlist('device')
         for x in selected_device_id:
             try:
                 dev = get_object_or_404(Device, pk=x)
+                ospf_process_id = request.POST['ospf_process_id'+x]
+                network = request.POST['network'+x] + '/' + request.POST['prefix'+x]
+                area = request.POST['area'+x]
                 def get_token():
                     url = 'https://%s:55443/api/v1/auth/token-services' % dev.ip_address
                     auth = (dev.username, dev.password) 
@@ -230,6 +242,7 @@ def ospf(request):
         all_devices = Device.objects.all()
         context = {
             'all_devices' : all_devices,
+            'superadmin' : check_superadmin(request),
         }
         return render(request, 'netauto/ospf.html', context)
 
@@ -237,12 +250,12 @@ def ospf(request):
 @superadmin_only
 def bgp(request):
     if request.method == "POST":
-        bgp_instance_id = request.POST['bgp_instance_id']
-        network = request.POST['network'] + '/32'
         selected_device_id = request.POST.getlist('device')
         for x in selected_device_id:
             try:
                 dev = get_object_or_404(Device, pk=x)
+                bgp_instance_id = request.POST['bgp_instance_id'+x]
+                network = request.POST['network'+x] + '/32'
                 def get_token():
                     url = 'https://%s:55443/api/v1/auth/token-services' % dev.ip_address
                     auth = (dev.username, dev.password) 
@@ -297,6 +310,7 @@ def bgp(request):
         all_devices = Device.objects.all()
         context = {
             'all_devices' : all_devices,
+            'superadmin' : check_superadmin(request),
         }
         return render(request, 'netauto/bgp.html', context)
 
@@ -358,6 +372,7 @@ def show_config(request):
         context = {
             'all_devices' : all_devices,
             'head' : head,
+            'superadmin' : check_superadmin(request),
         }
         return render(request, 'netauto/validate.html', context)
 
@@ -404,6 +419,7 @@ def syslog(request):
         all_devices = Device.objects.all()
         context = {
             'all_devices': all_devices,
+            'superadmin' : check_superadmin(request),
         }
         return render(request, 'netauto/syslog.html', context)
 
@@ -476,6 +492,7 @@ def custom(request):
     else:
         context = {
             'all_devices': all_devices,
+            'superadmin' : check_superadmin(request),
         }
         return render(request, 'netauto/custom.html', context)
 
@@ -483,7 +500,8 @@ def custom(request):
 def log(request):
     logs = Log.objects.all().order_by('-id')
     context = {
-        'logs': logs
+        'logs': logs,
+        'superadmin' : check_superadmin(request),
     }
     return render(request, 'netauto/log.html', context)
 

@@ -12,8 +12,8 @@
 
   <!-- {{ form.as_p }} -->
 
-  <select class="custom-select" name="router" id="routerID" required="true">
-    <option selected>Choose Target</option>
+  <select class="custom-select" name="router" id="routerID" required>
+    <option value="">Choose Target</option>
     {% for device in all_devices %}
     <option value="{{ device.id }}"
       >{{device.hostname}} - {{device.ip_address}}</option

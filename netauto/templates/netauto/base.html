@@ -63,16 +63,16 @@
 
         <!-- Divider -->
         <hr class="sidebar-divider" />
-
-        <!-- Nav Item - Devices -->
+        <!-- Nav Item - Administration -->
         <li class="nav-item">
-          <a class="nav-link" href=" {% url 'devices' %} ">
-            <i class="fas fa-fw fa-database"></i>
-            <span>Devices</span></a
+          <a class="nav-link" href=" {% url 'admin:index' %} ">
+            <i class="fas fa-fw fa-users-cog"></i>
+            <span>Administration</span></a
           >
         </li>
 
         <!-- Nav Item - Configure Collapse Menu -->
+        {% if superadmin %}
         <li class="nav-item">
           <a
             class="nav-link collapsed"
@@ -111,6 +111,15 @@
               </div>
             </div>
           </div>
+        </li>
+        {% endif %}
+
+        <!-- Nav Item - Devices -->
+        <li class="nav-item">
+          <a class="nav-link" href=" {% url 'devices' %} ">
+            <i class="fas fa-fw fa-database"></i>
+            <span>Devices</span></a
+          >
         </li>
 
         <!-- Nav Item - Log Collapse Menu -->
@@ -293,7 +302,6 @@
 
     <!-- Custom scripts for all pages-->
     <script src=" {% static 'netauto/js/sb-admin-2.min.js' %} "></script>
-
     <script>
       $("#sendButton").click(function () {
         var value = $("#routerID option:selected");
@@ -307,5 +315,21 @@
         );
       });
     </script>
+    {% for device in all_devices %}
+    <script>
+      $(function () {
+        var checkbox = $("#checkbox0{{device.id}}");
+        var hidden = $("#div0{{device.id}}");
+        hidden.hide();
+        checkbox.change(function () {
+          if (checkbox.is(":checked")) {
+            hidden.show();
+          } else {
+            hidden.hide();
+          }
+        });
+      });
+    </script>
+    {% endfor %}
   </body>
 </html>

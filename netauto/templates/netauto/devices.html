@@ -1,17 +1,15 @@
-
-{% extends "netauto/base.html" %}
-{% block content %}
-    <h2 class="mt-4 text-gray-800">Device List</h2>
-    <table class="table text-gray-800 table-bordered">
-        <tr>
-            <th>IP Address</th>
-            <th>Hostname</th>
-        </tr>
-        {% for device in all_devices %}
-            <tr>
-                <td>{{ device.ip_address }}</td>
-                <td>{{ device.hostname }}</td>
-            </tr>
-        {% endfor %}
-    </table>
+{% extends "netauto/base.html" %} {% block content %}
+<h2 class="mt-4 text-gray-800">Device List</h2>
+<table class="table table-light text-gray-800 table-bordered">
+  <tr>
+    <th>IP Address</th>
+    <th>Hostname</th>
+  </tr>
+  {% for device in all_devices %}
+  <tr>
+    <td>{{ device.ip_address }}</td>
+    <td>{{ device.hostname }}</td>
+  </tr>
+  {% endfor %}
+</table>
 {% endblock content %}

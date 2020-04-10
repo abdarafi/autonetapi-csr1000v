@@ -6,8 +6,8 @@
 </p>
 <form method="POST">
   {% csrf_token %}
-  <select class="custom-select" name="router" required="true">
-    <option selected>Choose Target</option>
+  <select class="custom-select" name="router" required>
+    <option value="">Choose Target</option>
     {% for device in all_devices %}
     <option value="{{ device.id }}"
       >{{device.hostname}} - {{device.ip_address}}</option
