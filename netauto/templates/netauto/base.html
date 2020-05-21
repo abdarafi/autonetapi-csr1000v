@@ -315,6 +315,20 @@
         );
       });
     </script>
+<script>
+
+$('.regex-control').keyup(function(){
+  var val = $(this).val();
+  if(isNaN(val)){
+       val = val.replace(/[^0-9\.]/g,'');
+  }
+  $(this).val(val); 
+});
+
+</script>
+
+
+
     {% for device in all_devices %}
     <script>
       $(function () {

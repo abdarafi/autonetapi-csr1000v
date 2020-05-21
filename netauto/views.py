@@ -410,7 +410,8 @@ def syslog(request):
             log = Log(target=dev.ip_address, action="Export Syslog", status="Error", time= datetime.now(), user=request.user.username, messages=e)
             log.save()
         
-        filename = "syslog.txt"
+        filename_date = str(datetime.now())
+        filename = "syslog_"+ str(dev.ip_address) +"_"+ filename_date + ".txt"
         content = get_syslog(token)
         response = HttpResponse(content, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename={0}'.format(filename)
