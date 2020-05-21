@@ -99,7 +99,7 @@ def add_ip(request):
                     log = Log(target=dev.ip_address, action="Modify IP Address", status="Error", time= datetime.now(), user=request.user.username, messages=put_interface(token,interface))
                     log.save()
             except Exception as e:
-                log = Log(target=dev.ip_address, action="Modify IP Address", status="Error", time= datetime.now(), user=request.user.username, messages=e)
+                log = Log(target=dev.ip_address, action="Modify IP Address", status="Error", time= datetime.now(), user=request.user.username, messages="Failed establishing connection to device or HTTP Connection failed")
                 log.save()
         return redirect('home')
     else:
@@ -162,7 +162,7 @@ def static_route(request):
                     log = Log(target=dev.ip_address, action="Add Static Route", status="Error", time= datetime.now(), user=request.user.username, messages=post_static_route(token,outinterface))
                     log.save()
             except Exception as e:
-                log = Log(target=dev.ip_address, action="Add Static Route", status="Error", time= datetime.now(), user=request.user.username, messages=e)
+                log = Log(target=dev.ip_address, action="Add Static Route", status="Error", time= datetime.now(), user=request.user.username, messages="Failed establishing connection to device or HTTP Connection failed")
                 log.save()
         return redirect('home')
 
@@ -233,7 +233,7 @@ def ospf(request):
                     log = Log(target=dev.ip_address, action="Add OSPF Route", status="Error", time= datetime.now(), user=request.user.username, messages=post_ospf(token))
                     log.save()
             except Exception as e:
-                log = Log(target=dev.ip_address, action="Add OSPF Route", status="Error", time= datetime.now(), user=request.user.username, messages=e)
+                log = Log(target=dev.ip_address, action="Add OSPF Route", status="Error", time= datetime.now(), user=request.user.username, messages="Failed establishing connection to device or HTTP Connection failed")
                 log.save()
 
         return redirect('home')
@@ -302,7 +302,7 @@ def bgp(request):
                     log = Log(target=dev.ip_address, action="Add BGP Route", status="Error", time= datetime.now(), user=request.user.username, messages=post_bgp(token))
                     log.save()
             except Exception as e:
-                log = Log(target=dev.ip_address, action="Add BGP Route", status="Error", time= datetime.now(), user=request.user.username, messages=e)
+                log = Log(target=dev.ip_address, action="Add BGP Route", status="Error", time= datetime.now(), user=request.user.username, messages="Failed establishing connection to device or HTTP Connection failed")
                 log.save()
 
         return redirect('home')
@@ -359,7 +359,7 @@ def show_config(request):
                 log = Log(target=dev.ip_address, action="Validate Configuration", status="Error", time= datetime.now(), user=request.user.username, messages="Invalid Cisco Command")
                 log.save()
         except Exception as e:
-            log = Log(target=dev.ip_address, action="Validate Configuration", status="Error", time= datetime.now(), user=request.user.username, messages=e[:100])
+            log = Log(target=dev.ip_address, action="Validate Configuration", status="Error", time= datetime.now(), user=request.user.username, messages="Failed establishing connection to device or HTTP Connection failed")
             log.save()
         context = {
             'head' : head,
@@ -407,7 +407,7 @@ def syslog(request):
             log = Log(target=dev.ip_address, action="Export Syslog", status="Successful", time= datetime.now(), user=request.user.username, messages="No Error")
             log.save()
         except Exception as e:
-            log = Log(target=dev.ip_address, action="Export Syslog", status="Error", time= datetime.now(), user=request.user.username, messages=e)
+            log = Log(target=dev.ip_address, action="Export Syslog", status="Error", time= datetime.now(), user=request.user.username, messages="Failed establishing connection to device or HTTP Connection failed")
             log.save()
         
         filename_date = str(datetime.now())
@@ -483,7 +483,7 @@ def custom(request):
             except Exception as e:
                 error_false = "Expecting value: line 1 column 1 (char 0)"
                 if error_false not in str(e):
-                    log = Log(target=dev.ip_address, action="Custom Configuration", status="Error", time= datetime.now(), user=request.user.username, messages=e)
+                    log = Log(target=dev.ip_address, action="Custom Configuration", status="Error", time= datetime.now(), user=request.user.username, messages="Failed establishing connection to device or HTTP Connection failed")
                 else:
                     log = Log(target=dev.ip_address, action="Custom Configuration", status="Successful", time= datetime.now(), user=request.user.username, messages="No Error")
                 log.save()
