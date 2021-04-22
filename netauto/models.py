@@ -111,18 +111,18 @@ class Detector(models.Model):
                     verify=False).status_code >= 400:
                 log = Log(target=self.device.ip_address, action="Configure Netflow", status="Error",
                           time=datetime.now(),
-                          user=None, messages="Invalid Script")
+                          user='Anonymous', messages="Invalid Script")
                 log.save()
             else:
                 super(Detector, self).save(*args, **kwargs)
                 log = Log(target=self.device.ip_address, action="Configure Netflow", status="Successful",
-                          time=datetime.now(), user=None, messages="No Error")
+                          time=datetime.now(), user='Anonymous', messages="No Error")
                 log.save()
 
         except Exception as e:
             log = Log(target=self.device.ip_address, action="Configure Netflow", status="Error",
                       time=datetime.now(),
-                      user=None, messages="Failed establishing connection to device or requirements not match")
+                      user='Anonymous', messages="Failed establishing connection to device or requirements not match")
             log.save()
 
     def __str__(self):
