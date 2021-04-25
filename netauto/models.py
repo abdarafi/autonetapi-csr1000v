@@ -126,10 +126,15 @@ class Detector(models.Model):
         return self.device.set_config(token, config_string)
 
     def remove_netflow_config(self) -> bool:
-        config_string = 'no flow monitor {}\n' \
+        config_string = 'int {}\n' \
+                        'no ip flow monitor {} input' \
+                        'exit' \
+                        'no flow monitor {}\n' \
                         'no flow record {}\n' \
                         'no Flow Exporter {}\n' \
-                        'do copy run start'.format(*self.netflow_slugs)
+                        'do copy run start'.format(self.device_interface,
+                                                   self.netflow_slugs.monitor_slug,
+                                                   *self.netflow_slugs)
         return self.device.set_config(self.device.get_token(), config_string)
 
     def save(self, force_insert=False, force_update=False, using=None,
@@ -137,7 +142,7 @@ class Detector(models.Model):
         if update_fields is not None:
             try:
                 if self.remove_netflow_config():
-                    log = Log(target=self.device.ip_address, action="[Nescientt] Remove Netflow Config",
+                    log = Log(target=self.device.ip_address, action="[Nesciente] Remove Netflow Config",
                               status="Successful",
                               time=datetime.now(), user='Anonymous', messages="No Error")
                     log.save()
@@ -168,6 +173,25 @@ class Detector(models.Model):
                       time=datetime.now(),
                       user='Anonymous', messages=e.__str__()[0:255])
             log.save()
+
+    def delete(self, using=None, keep_parents=False, *args, **kwargs):
+        try:
+            if self.remove_netflow_config():
+                log = Log(target=self.device.ip_address, action="[Nescient] Remove Netflow Config",
+                          status="Successful",
+                          time=datetime.now(), user='Anonymous', messages="No Error")
+                log.save()
+            else:
+                log = Log(target=self.device.ip_address, action="[Nescient] Remove Netflow Config",
+                          status="Error",
+                          time=datetime.now(), user='Anonymous', messages="Invalid Script")
+                log.save()
+        except Exception as e:
+            log = Log(target=self.device.ip_address, action="[Nescient] Remove Netflow Config", status="Exception",
+                      time=datetime.now(),
+                      user='Anonymous', messages=e.__str__()[0:255])
+            log.save()
+        super(Detector, self).delete(*args, **kwargs)
 
     def __str__(self):
         return "{} {} {} {}".format(

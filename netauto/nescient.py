@@ -11,6 +11,7 @@ def core(data_to_be_used: list, detector_instance: Detector):
     sampling_interval = detector_instance.sampling_interval
     window_size = detector_instance.window_size
 
+
     A1_all = []
     A2_all = []
     A3_all = []

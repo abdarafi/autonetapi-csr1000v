@@ -49,6 +49,7 @@ def get_netflow_resampled(start_time: str, end_time: int, elastic_host: str, ela
             }
         }
     )
+    print('her')
     return response["aggregations"]["all_attributes"]["buckets"]
 
 
