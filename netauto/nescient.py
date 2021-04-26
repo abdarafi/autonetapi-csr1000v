@@ -146,5 +146,5 @@ def handle_result(j, N, data, detector_instance: Detector):
 
             log = Log(target=detector_instance.device.ip_address, action="Detection", status="[Nescient]",
                       time=datetime.now(),
-                      user=None, messages="NEGATIVE {}".format(report))
+                      user='Anonymous', messages="NEGATIVE {}".format(report))
             log.save()

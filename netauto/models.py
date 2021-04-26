@@ -131,7 +131,7 @@ class Detector(models.Model):
                         'exit' \
                         'no flow monitor {}\n' \
                         'no flow record {}\n' \
-                        'no Flow Exporter {}\n' \
+                        'no flow exporter {}\n' \
                         'do copy run start'.format(self.device_interface,
                                                    self.netflow_slugs.monitor_slug,
                                                    *self.netflow_slugs)
@@ -142,7 +142,7 @@ class Detector(models.Model):
         if update_fields is not None:
             try:
                 if self.remove_netflow_config():
-                    log = Log(target=self.device.ip_address, action="[Nesciente] Remove Netflow Config",
+                    log = Log(target=self.device.ip_address, action="[Nescient] Remove Netflow Config",
                               status="Successful",
                               time=datetime.now(), user='Anonymous', messages="No Error")
                     log.save()
