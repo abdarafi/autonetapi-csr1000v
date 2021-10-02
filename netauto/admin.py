@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Device, Log
+from .models import Device, Log, Detector
 
 admin.site.site_header = "AutonetAPI Administration"
 admin.site.site_title = "AutonetAPI"
@@ -9,3 +9,4 @@ admin.site.index_title = "Site Administration"
 
 admin.site.register(Device)
 admin.site.register(Log)
+admin.site.register(Detector)

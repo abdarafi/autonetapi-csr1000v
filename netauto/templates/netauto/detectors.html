@@ -1,0 +1,23 @@
+{% extends "netauto/base.html" %} {% block content %}
+    <h2 class="mt-4 text-gray-800">Detector List</h2>
+    <table class="table table-light text-gray-800 table-bordered">
+        <tr>
+            <th>Device hostname</th>
+            <th>Window Size</th>
+            <th>Sampling Interval</th>
+            <th>Elasticsearch</th>
+            <th>Elasticsearch Index</th>
+            <th>Filebeat Netflow Listener</th>
+        </tr>
+        {% for detector in all_detectors %}
+            <tr>
+                <td>{{ detector.device.hostname }}</td>
+                <td>{{ detector.window_size }}</td>
+                <td>{{ detector.sampling_interval }}s</td>
+                <td>{{ detector.elastic_host }}</td>
+                <td>{{ detector.elastic_index }}</td>
+                <td>{{ detector.filebeat_host }}:{{ detector.filebeat_port }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock content %}
