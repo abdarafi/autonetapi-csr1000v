@@ -1,6 +1,6 @@
 asgiref==3.2.3
 astroid==2.3.3
-certifi==2019.11.28
+certifi==2022.12.7
 chardet==3.0.4
 djangify==1.0.0
 Django==3.1.13
